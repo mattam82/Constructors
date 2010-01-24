@@ -1,0 +1,37 @@
+Constructors: an example Coq plugin
+===================================
+Copyright 2010 Matthieu Sozeau <mattam@mattam.org>
+
+This archive contains an example Coq plugin that implements a
+tactic to get the constructors of an inductive type in Ltac.
+It serves as a documented example on both the plugin system
+and how to write simple tactics in OCaml.
+
+The archive has 3 subdirectories:
+src/ contains the code of the plugin in constructors.ml and
+  a set of support file for building the constructors plugin.
+
+theories/ contains support Coq files for the plugin. Dynamic
+  is referenced from the code of the plugin above.
+
+test-suite/ just demonstrates a use of the plugin
+
+
+Installation
+============
+
+First, you should have coqc, ocamlc and make in your path. 
+Then simply do:
+
+# coq_makefile -f Make -o Makefile
+
+To generate a makefile from the description in Make, then [make].
+This will consecutively build the plugin, the supporting 
+theories and the test-suite file.
+
+You can then either [make install] the plugin or leave it in its
+current directory. To be able to import it from anywhere in Coq,
+simply add the following to ~/.coqrc:
+
+Add Rec LoadPath "path_to_constructors/theories" as Constructors.
+Add ML Path "path_to_constructors/src".
