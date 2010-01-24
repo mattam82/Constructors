@@ -9,10 +9,11 @@ and how to write simple tactics in OCaml.
 
 The archive has 3 subdirectories:
 src/ contains the code of the plugin in constructors.ml and
-  a set of support file for building the constructors plugin.
+  a support file for building the constructors plugin.
 
-theories/ contains support Coq files for the plugin. Dynamic
+theories/ contains support Coq files for the plugin. Dynamic.v
   is referenced from the code of the plugin above.
+  Constructors.v declares the plugin on the Coq side.
 
 test-suite/ just demonstrates a use of the plugin
 
