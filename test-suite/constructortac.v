@@ -7,11 +7,7 @@ Ltac apply_in_dyn_list v :=
   end.
 
 Ltac constructor_of ind :=
-  let x := fresh in
-    constructors of ind in x ;
-    let v := eval cbv in x in
-      clear x;
-      apply_in_dyn_list v.
+  constructors_of ind ltac:(apply_in_dyn_list).
 
 Ltac constructor_tac := 
   match goal with
