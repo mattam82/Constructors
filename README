@@ -1,8 +1,8 @@
 Constructors: an example Coq plugin
 ===================================
 Copyright 2010 Matthieu Sozeau <mattam@mattam.org>
-Distributed under the terms of the GNU Lesser General
-Public License Version 2.1, see LICENSE for details.
+Distributed under the terms of the New BSD License,
+see LICENSE for details.
 
 This archive contains an example Coq plugin that implements a
 tactic to get the constructors of an inductive type in Ltac.
