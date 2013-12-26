@@ -38,6 +38,6 @@ Ltac constructor_tac :=
     | |- ?T => repeat constructor_of T
   end.
 
-Goal vector nat (S 0).
-constructor_tac. exact 0.
+Goal Bvector (S 0).
+constructor_tac. exact true.
 Defined.
