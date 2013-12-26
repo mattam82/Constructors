@@ -8,6 +8,7 @@ COQDOC = "$(COQBIN)coqdoc -interpolate -utf8"
 CAMLP4OPTIONS = "-loc loc"
 src/constructors.ml4
 src/constructors_plugin_mod.ml
+src/constructors_plugin.mllib
 theories/Dynamic.v
 theories/Constructors.v
 test-suite/constructortac.v
