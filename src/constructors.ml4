@@ -106,7 +106,7 @@ open Tacinterp
 (* A clause specifying that the [let] should not try to fold anything the goal
    matching the list of constructors (see [letin_tac] below). *)
 
-let nowhere = { onhyps = Some []; concl_occs = Rawterm.no_occurrences_expr }
+let nowhere = { onhyps = Some []; concl_occs = Glob_term.no_occurrences_expr }
 
 (* This adds an entry to the grammar of tactics, similar to what
    Tactic Notation does. There's currently no way to return a term 
