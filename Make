@@ -6,7 +6,7 @@ CONSTRUCTORS_PLUGIN = "src/constructors_plugin.cma"
 CONSTRUCTORS_PLUGINOPT = "src/constructors_plugin.cmxs"
 COQDOC = "$(COQBIN)coqdoc -interpolate -utf8"
 CAMLP4OPTIONS = "-loc loc"
-src/constructors.ml
+src/constructors.ml4
 src/constructors_plugin_mod.ml
 theories/Dynamic.v
 theories/Constructors.v
