@@ -4,6 +4,8 @@ Copyright 2010 Matthieu Sozeau <mattam@mattam.org>
 Distributed under the terms of the New BSD License,
 see LICENSE for details.
 
+Update for Coq 8.4pl2 by Wojciech Jedynak <wjedynak@gmail.com> 2013.
+
 This archive contains an example Coq plugin that implements a
 tactic to get the constructors of an inductive type in Ltac.
 It serves as a documented example on both the plugin system
