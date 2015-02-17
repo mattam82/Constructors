@@ -1,7 +1,7 @@
 Constructors: an example Coq plugin
 ===================================
-Copyright 2010 Matthieu Sozeau <mattam@mattam.org>
-Distributed under the terms of the New BSD License,
+Copyright 2010-2015 Matthieu Sozeau <mattam@mattam.org>
+Distributed under the terms of the MIT License,
 see LICENSE for details.
 
 Updated for Coq 8.4pl2 and 8.4pl3 by Wojciech Jedynak <wjedynak@gmail.com>.
@@ -24,6 +24,10 @@ test-suite/ just demonstrates a use of the plugin
 
 Installation
 ============
+
+Through OPAM, this plugin is available in repo-unstable:
+
+# opam install coq:constructors
 
 First, you should have coqc, ocamlc and make in your path. 
 Then simply do:
