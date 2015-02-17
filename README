@@ -5,6 +5,7 @@ Distributed under the terms of the MIT License,
 see LICENSE for details.
 
 Updated for Coq 8.4pl2 and 8.4pl3 by Wojciech Jedynak <wjedynak@gmail.com>.
+Current version for 8.5beta1.
 
 This archive contains an example Coq plugin that implements a
 tactic to get the constructors of an inductive type in Ltac.
@@ -25,7 +26,7 @@ test-suite/ just demonstrates a use of the plugin
 Installation
 ============
 
-Through OPAM, this plugin is available in repo-unstable:
+Through OPAM, this plugin is available in Coq's repo-unstable:
 
 # opam install coq:constructors
 
