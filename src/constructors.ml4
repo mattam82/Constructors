@@ -37,16 +37,22 @@
 (*i camlp4deps: "parsing/grammar.cma" i*)
 (*i camlp4use: "pa_extend.cmo" i*)
 
+DECLARE PLUGIN "constructors"
+
 (* $$ *)
 
 open Term
 open Names
 open Coqlib
+open Universes 
+open Globnames
+open Vars
+open Errors
 
 (* Getting constrs (primitive Coq terms) from exisiting Coq libraries. *)
 
 let find_constant contrib dir s =
-  Libnames.constr_of_global (Coqlib.find_reference contrib dir s)
+  constr_of_global (Coqlib.find_reference contrib dir s)
 
 let contrib_name = "constructors"
 let init_constant dir s = find_constant contrib_name dir s
@@ -80,15 +86,15 @@ let constructors env c =
   (* Decompose the application of the inductive type to params and arguments. *)
   let ind, args = Inductive.find_rectype env c in
   (* Find information about it (constructors, other inductives in the same block...) *)
-  let mindspec = Global.lookup_inductive ind in
+  let mindspec = Global.lookup_pinductive ind in
   (* The [list dyn] term *)
   let listty = mkApp (Lazy.force coq_list_ind, [| Lazy.force coq_dynamic_ind |]) in
   let listval =
     (* We fold on the constructors and build a [dyn] object for each one. *)
-    Util.array_fold_right_i (fun i v l -> 
+    CArray.fold_right_i (fun i v l -> 
       (* Constructors are just referenced using the inductive type
 	 and constructor number (starting at 1). *)
-      let cd = mkConstruct (ind, succ i) in
+      let cd = mkConstructUi (ind, succ i) in
       let d = mkDyn v cd in
 	(* Cons the constructor on the list *)
 	mkApp (Lazy.force coq_list_cons, [| Lazy.force coq_dynamic_ind; d; l |]))
@@ -106,18 +112,27 @@ open Tacinterp
 (* A clause specifying that the [let] should not try to fold anything the goal
    matching the list of constructors (see [letin_tac] below). *)
 
-let nowhere = { onhyps = Some []; concl_occs = Glob_term.no_occurrences_expr }
+let nowhere = Locus.({ onhyps = Some []; concl_occs = NoOccurrences })
 
 (* This adds an entry to the grammar of tactics, similar to what
    Tactic Notation does. There's currently no way to return a term 
    through an extended tactic, hence the use of a let binding. *)
 
+let constructors gl c id = 
+  let open Proofview in
+  let open Notations in
+  let env = Goal.env gl in
+  let sigma = Goal.sigma gl in
+  let v, t = constructors env c in
+  let tac = V82.tactic (Refiner.tclEVARS (fst (Typing.e_type_of env sigma v))) in
+    (* Defined the list in the context using name [id]. *)	    
+    tac <*> Tactics.letin_tac None (Name id) v (Some t) nowhere
+
 TACTIC EXTEND constructors_of_in
 | ["constructors" "of" constr(c) "in" ident(id) ] -> 
-    [ fun gl -> (* The current goal *)
-      let v, t = constructors (pf_env gl) c in
-	(* Defined the list in the context using name [id]. *)
-	Tactics.letin_tac None (Name id) v (Some t) nowhere gl
+  [ Proofview.Goal.enter begin fun gl ->
+    let gl = Proofview.Goal.assume gl in
+      constructors gl c id
+  end 
     ]
 END
-

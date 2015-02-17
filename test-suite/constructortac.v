@@ -22,7 +22,7 @@
 (* ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.                                                   *)
 (************************************************************************************************)
 
-Require Import Constructors Bvector.
+Require Import Constructors.Constructors Bvector.
 
 Ltac apply_in_dyn_list v :=
   match v with
