@@ -1,6 +1,6 @@
 Constructors: an example Coq plugin
 ===================================
-Copyright 2010 Matthieu Sozeau <mattam@mattam.org>
+Copyright 2010-2015 Matthieu Sozeau <mattam@mattam.org>
 Distributed under the terms of the New BSD License,
 see LICENSE for details.
 
@@ -24,6 +24,10 @@ test-suite/ just demonstrates a use of the plugin
 
 Installation
 ============
+
+Through OPAM, this package is available in repo-stable:
+
+# opam install coq:constructors
 
 First, you should have coqc, ocamlc and make in your path. 
 Then simply do:
