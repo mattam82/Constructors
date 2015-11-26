@@ -22,11 +22,21 @@ The archive has 3 subdirectories:
 * `test-suite/` just demonstrates a use of the plugin.
 
 ## Installation
+### With OPAM
+Make sure that you added the Coq repository:
+
+    opam repo add coq-released https://coq.inria.fr/opam/released
+
+and run:
+
+    opam install coq-constructors
+
+### From the sources
 First, you should have `coqc`, `ocamlc` and `make` in your path. Then simply do:
 
     coq_makefile -f Make -o Makefile
 
-to generate a makefile from the description in `Make`, then `make`.
+to generate a `Makefile` from the description in `Make`, then `make`.
 This will consecutively build the plugin, the supporting
 theories and the test-suite file.
 
