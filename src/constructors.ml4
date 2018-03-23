@@ -6,13 +6,13 @@
 (** Constructors - An example plugin and tactic for Coq
 
     This defines a tactic [constructors of c in id] that puts
-    the list of constructors of the inductive type [c] in the 
-    (fresh) hypothesis [id]. We build a [list dynamic] where 
+    the list of constructors of the inductive type [c] in the
+    (fresh) hypothesis [id]. We build a [list dynamic] where
     [dyn] is defined in a support file of the plugin
     (in theories/Dynamic.v) and is isomorphic to a sigma type.
 *)
 
-(* These are necessary for grammar extensions like the one at the end 
+(* These are necessary for grammar extensions like the one at the end
    of the module *)
 
 (*i camlp4deps: "parsing/grammar.cma" i*)
@@ -25,10 +25,10 @@ DECLARE PLUGIN "constructors"
 open Term
 open Names
 open Coqlib
-open Universes 
+open Universes
 open Globnames
 open Vars
-open Errors
+open CErrors
 
 (* Getting constrs (primitive Coq terms) from exisiting Coq libraries. *)
 
@@ -41,7 +41,7 @@ let init_constant dir s = find_constant contrib_name dir s
 let constructors_path = ["Constructors";"Dynamic"]
 
 (* We use lazy as the Coq library is not yet loaded when we
-   initialize the plugin, once [Constructors.Dynamic] is loaded 
+   initialize the plugin, once [Constructors.Dynamic] is loaded
    in the interpreter this will resolve correctly. *)
 
 let coq_dynamic_ind = lazy (init_constant constructors_path "dyn")
@@ -51,7 +51,7 @@ let coq_dynamic_obj = lazy (init_constant constructors_path "dyn_value")
 
 (* Reflect the constructor of [dyn] values *)
 
-let mkDyn ty value = 
+let mkDyn ty value =
   mkApp (Lazy.force coq_dynamic_constr, [| ty ; value |])
 
 (* We also need lists from the standard library. *)
@@ -72,7 +72,7 @@ let constructors env c =
   let listty = mkApp (Lazy.force coq_list_ind, [| Lazy.force coq_dynamic_ind |]) in
   let listval =
     (* We fold on the constructors and build a [dyn] object for each one. *)
-    CArray.fold_right_i (fun i v l -> 
+    CArray.fold_right_i (fun i v l ->
       (* Constructors are just referenced using the inductive type
 	 and constructor number (starting at 1). *)
       let cd = mkConstructUi (ind, succ i) in
@@ -89,6 +89,8 @@ open Tacmach
 open Tacticals
 open Tacexpr
 open Tacinterp
+open Constrarg
+
 
 (* A clause specifying that the [let] should not try to fold anything the goal
    matching the list of constructors (see [letin_tac] below). *)
@@ -96,24 +98,24 @@ open Tacinterp
 let nowhere = Locus.({ onhyps = Some []; concl_occs = NoOccurrences })
 
 (* This adds an entry to the grammar of tactics, similar to what
-   Tactic Notation does. There's currently no way to return a term 
+   Tactic Notation does. There's currently no way to return a term
    through an extended tactic, hence the use of a let binding. *)
 
-let constructors gl c id = 
+let constructors gl c id =
   let open Proofview in
   let open Notations in
   let env = Goal.env gl in
-  let sigma = Goal.sigma gl in
+  let sigma = Sigma.to_evar_map(Goal.sigma gl) in
   let v, t = constructors env c in
-  let tac = V82.tactic (Refiner.tclEVARS (fst (Typing.e_type_of env sigma v))) in
-    (* Defined the list in the context using name [id]. *)	    
-    tac <*> Tactics.letin_tac None (Name id) v (Some t) nowhere
+  let tac = V82.tactic (Refiner.tclEVARS (fst (Typing.type_of env sigma v))) in
+    (* Defined the list in the context using name [id]. *)
+  tac <*> Tactics.letin_tac None (Name id) v (Some t) nowhere
 
 TACTIC EXTEND constructors_of_in
-| ["constructors" "of" constr(c) "in" ident(id) ] -> 
-  [ Proofview.Goal.enter begin fun gl ->
+| ["constructors" "of" constr(c) "in" ident(id) ] ->
+  [ Proofview.Goal.enter { enter = begin fun gl ->
     let gl = Proofview.Goal.assume gl in
       constructors gl c id
-  end 
+  end }
     ]
 END
